@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta http-equiv="Content-Security-Policy" content="connect-src 'none'; object-src 'none'; base-uri 'none'">
+  <meta name="description" content="Local audio and lyric timing studio.">
+  <title>studio</title>
+  <style>/* STUDIO_CSS */</style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="wordmark" href="#" aria-label="studio home"><span class="mark">▥</span> studio<span class="version">/ 01</span></a>
+    <nav aria-label="Project">
+      <button id="open-project">Open project</button><button id="save-project" disabled>Save project</button>
+      <button id="html-export" class="primary" disabled>Export HTML <span>↗</span></button>
+      <button id="video-open" disabled>Export MP4 <span>↗</span></button>
+    </nav>
+  </header>
+  <main>
+    <div class="workspace-heading"><span><i></i> LOCAL WORKSPACE</span><span id="session-info">No media loaded</span></div>
+    <div class="workbench">
+      <aside class="editor">
+        <section class="panel">
+          <div class="section-heading"><h1><span>01</span> Source</h1><span id="media-size">—</span></div>
+          <label class="dropzone" id="media-drop" for="media-file"><span class="upload-icon">↑</span><strong id="media-name">Drop audio or choose a file</strong><small>FLAC · M4A · MP3 · WAV · video audio</small></label>
+          <input type="file" id="media-file" accept="audio/*,video/*,.flac,.m4a,.mp3,.wav,.aiff,.aif,.ogg,.opus,.aac" class="file-input">
+          <div class="title-row"><label>Title<input id="track-title" placeholder="Untitled" maxlength="2000"></label><label class="accent-label">Accent<input type="color" id="accent" value="#90efb8"></label></div>
+        </section>
+        <section class="panel lyrics-editor">
+          <div class="section-heading"><h2><span>02</span> Lyrics</h2><button id="lyrics-open" class="text-button">Import .md ↗</button></div>
+          <label class="sr-only" for="lyrics">Lyrics</label>
+          <textarea id="lyrics" placeholder="[Verse 1]&#10;One line at a time&#10;As the words arrive" spellcheck="false"></textarea>
+          <div class="editor-footer"><span id="line-count">0 lines</span><span>Blank lines are ignored</span></div>
+          <input type="file" id="lyrics-file" accept=".md,.txt,.lrc,text/plain,text/markdown" class="file-input">
+        </section>
+        <details class="panel timings-panel" id="timings-panel">
+          <summary><span>03</span> Timeline <span id="stamp-count">0 timed</span></summary>
+          <div class="timeline-tools"><button id="timing-import">Import JSON</button><button id="timing-export" disabled>Export JSON</button><button id="lrc-export" disabled>LRC</button></div>
+          <div id="timeline" class="timeline"><p class="muted">Mark lyrics to build a timeline.</p></div>
+          <button id="clear-timings" class="text-button" disabled>Clear timestamps</button>
+          <input type="file" id="timing-file" accept=".json,application/json" class="file-input">
+        </details>
+      </aside>
+      <section class="preview-area">
+        <div class="preview-toolbar"><span>PERFORMANCE</span><button id="fullscreen" class="text-button">Fullscreen ⛶</button></div>
+        <div class="performance" id="performance">
+          <div class="performance-top"><span id="mode-label">PREVIEW</span><span id="performance-clock">00:00 / 00:00</span></div>
+          <div class="performance-body"><div class="track-meta"><span class="meta-label">TITLE</span><h2 id="preview-title">Untitled</h2><span class="meta-label">SOURCE</span><p id="preview-source">—</p><span class="meta-label">TIMING</span><p id="preview-timing">Manual / not started</p></div>
+            <div id="lyric-preview" class="lyric-preview"><div class="empty-state"><span>∷</span><p>Your lyrics appear here.</p><small>Load audio, add words, then mark each line.</small></div></div>
+          </div>
+          <canvas id="spectrum" aria-label="Audio spectrum"></canvas>
+          <div class="player-wrap"><audio id="player" controls preload="metadata"></audio></div>
+        </div>
+        <div class="sync-panel">
+          <div class="sync-header"><div><span class="eyebrow">MANUAL SYNC</span><p id="sync-instruction">Mark the moment each lyric begins.</p></div><button id="sync-start" disabled>Start timing</button></div>
+          <div id="sync-controls" class="sync-controls" hidden><button id="stamp" class="stamp-button">Mark line <kbd>Enter</kbd></button><button id="undo" disabled>Undo</button><button id="sync-save" class="primary">Save timing</button><button id="sync-cancel">Cancel</button></div>
+          <div class="shortcuts"><span><kbd>Space</kbd> Play / pause</span><span><kbd>←</kbd><kbd>→</kbd> Seek 5s</span><span>Click a lyric to select or seek</span></div>
+        </div>
+        <div class="status" role="status" aria-live="polite"><i id="status-dot"></i><span id="status-text">Ready. Files stay in this browser.</span></div>
+      </section>
+    </div>
+  </main>
+  <footer class="page-footer"><span>studio <span class="subtle">/ local audio + lyric timing</span></span><button id="about-open" class="text-button">Source & licenses</button></footer>
+  <input type="file" id="project-file" accept=".studio.json,.json,application/json" class="file-input">
+  <dialog id="video-dialog">
+    <form method="dialog" class="dialog-header"><h2>Export MP4</h2><button aria-label="Close" id="video-close">×</button></form>
+    <p class="muted">Performance view · H.264 video + AAC audio · 30 fps</p>
+    <label>Resolution<select id="video-resolution"><option value="1280,720">1280 × 720 · landscape</option><option value="1920,1080">1920 × 1080 · landscape</option><option value="1080,1920">1080 × 1920 · portrait</option></select></label>
+    <p class="small muted">Encoded locally, without playing or recording your screen. Large exports need sufficient browser memory. Native stem separation is not included.</p>
+    <progress id="video-progress" value="0" max="1" hidden></progress><p id="video-status" role="status"></p>
+    <div class="dialog-actions"><button id="video-cancel" hidden>Cancel export</button><button id="video-export" class="primary">Export MP4</button></div>
+  </dialog>
+  <dialog id="about-dialog"><form method="dialog" class="dialog-header"><h2>studio</h2><button aria-label="Close">×</button></form>
+    <p>Standalone lyric studio derived from mm-tools Yue2. The HTML player builder is unmodified. Stem separation in the original requires Python models and is not included here.</p>
+    <p>All processing is local. No uploads, analytics, external fonts, or runtime downloads.</p>
+    <button id="source-download">Download corresponding source</button>
+    <details><summary>Licenses and provenance</summary><pre id="licenses">STUDIO_LICENSES</pre></details>
+  </dialog>
+  <script id="studio-source" type="application/json">STUDIO_SOURCE</script>
+  <script>/* STUDIO_JS */</script>
+</body>
+</html>

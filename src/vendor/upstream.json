@@ -1,0 +1,23 @@
+{
+  "repository": "https://github.com/CommanderTurtle/mm-tools",
+  "revision": "789efc7778e4c05a948bffb3c96ea91c03844c44",
+  "file": "music/yue2/local_app/web/app.js",
+  "functions": [
+    {
+      "name": "escapeHtml",
+      "sha256": "5730a6d1f3d54b2ad7f4b42cf997d4180358fafadee32e02d810e396194863d5"
+    },
+    {
+      "name": "hexToRgb",
+      "sha256": "55f63326e0675339d6c6aaaa544ab17aaf3908f086344614552fa28010ddbb98"
+    },
+    {
+      "name": "buildAudioPlayerHtml",
+      "sha256": "6921ad695418ad26c02927c2bf9024e7782f76503ce2d1d11b00780870f205dc"
+    },
+    {
+      "name": "audioBufferToWav",
+      "sha256": "fdeff6c56a463c28c3d96182a446cfd1e1aa679793ee362dc621b24206965500"
+    }
+  ]
+}

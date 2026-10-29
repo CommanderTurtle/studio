@@ -1,0 +1,13 @@
+import { readFile } from 'node:fs/promises';
+import { parseLyrics } from '../src/core.js';
+import { buildAudioPlayerHtml } from '../src/vendor/yue-player.js';
+const path = process.argv[2];
+if (!path) throw Error('Pass the HTML export of studio-check.wav with the generated lyrics/timing fixtures.');
+const html = await readFile(path, 'utf8');
+const source = html.match(/<audio id="player" src="([^"]+)"/)?.[1];
+if (!source?.startsWith('data:audio/')) throw Error('Export has no embedded audio.');
+const lyrics = parseLyrics(await readFile(new URL('../.work/fixtures/lyrics.md', import.meta.url), 'utf8'));
+const { lyric_timestamps: timestamps } = JSON.parse(await readFile(new URL('../.work/fixtures/timing.json', import.meta.url), 'utf8'));
+const expected = buildAudioPlayerHtml({ title: 'studio-check', source, accent: '#90efb8', lyrics, timestamps });
+if (html !== expected) throw Error('Downloaded player differs from original Yue builder output.');
+console.log('Exact Yue output parity; media embedded; ' + timestamps.length + ' saved timestamps.');

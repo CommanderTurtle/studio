@@ -1,0 +1,3 @@
+* text=auto eol=lf
+# Preserve the original upstream function bytes, including their CRLF endings.
+src/vendor/yue-player.js -text whitespace=cr-at-eol

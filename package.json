@@ -1,0 +1,17 @@
+{
+  "name": "studio",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "license": "AGPL-3.0-only",
+  "scripts": {
+    "build": "bun scripts/build.ts",
+    "start": "bun scripts/serve.ts",
+    "dev": "bun run build && bun run start",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "mediabunny": "1.62.1",
+    "@mediabunny/aac-encoder": "1.62.1"
+  }
+}
